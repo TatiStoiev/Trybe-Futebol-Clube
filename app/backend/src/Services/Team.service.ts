@@ -8,7 +8,7 @@ export default class TeamService {
     private teamModel: ITeamModel = new TeamModel(),
   ) {}
 
-  public async getAllBooks(): Promise<ServiceResponse<ITeams[]>> {
+  public async getAllTeams(): Promise<ServiceResponse<ITeams[]>> {
     const allTeams = await this.teamModel.findAll();
     return { status: 'SUCCESSFUL', data: allTeams };
   }

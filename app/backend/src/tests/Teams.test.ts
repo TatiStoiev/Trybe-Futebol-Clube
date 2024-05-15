@@ -4,21 +4,21 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 import {teams} from './mocks/TeamsMock'
 import SequelizeTeams from '../database/models/SequelizeTeams';
+import { mockfindAll, mockFindById, mockTeamIdNotFound, mockTeam } from './mocks/TeamsMock';
 
 import { app } from '../app';
 import Example from '../database/models/ExampleModel';
 
 import { Response } from 'superagent';
+import mapStatusHTTP from '../utils/mapStatusHTTP';
+import TeamService from '../Services/Team.service';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
+const teamService = new TeamService();
 
-const mockfindAll = {
-  status: 200, 
-  data: teams
-}
 
 describe('Testes para a rota Teams', () => {
   afterEach(function () {
@@ -34,29 +34,21 @@ describe('Testes para a rota Teams', () => {
     expect(response.body).to.be.deep.equal(mockfindAll);
   })
 
-  /**
-   * Exemplo do uso de stubs com tipos
-   */
+  it('Deve retornar status 200 e o time por id', async function () {
+    sinon.stub(teamService, 'getById').resolves(mockFindById as any);
 
-  // let chaiHttpResponse: Response;
+    const response = (await chai.request(app).get('/teams/1'));
 
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
+    expect(response.status).to.be.equal(200);
+    expect(response.body).to.be.deep.equal(mockTeam)
+  })
 
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
+  it('Deve retornar status 404 se o id do time não for encontrado', async function () {
 
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
+    sinon.stub(teamService, 'getById').resolves(mockTeamIdNotFound as any);
 
-  //   expect(...)mockfindAll
-  // });
+    const response = (await chai.request(app).get('/teams/999'));
+
+    expect(response.status).to.be.equal(404);
+  })
 });

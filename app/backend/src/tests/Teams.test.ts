@@ -2,6 +2,8 @@ import * as sinon from 'sinon';
 import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
+import {teams} from './mocks/TeamsMock'
+import SequelizeTeams from '../database/models/SequelizeTeams';
 
 import { app } from '../app';
 import Example from '../database/models/ExampleModel';
@@ -12,7 +14,26 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
+
+const mockfindAll = {
+  status: 200, 
+  data: teams
+}
+
 describe('Seu teste', () => {
+  afterEach(function () {
+    sinon.restore();
+  });
+
+  it('Deve retornar status SUCCESSFUL e a lista de times', async function () {
+    sinon.stub(SequelizeTeams, 'findAll').resolves(mockfindAll as any);
+
+    const response = await chai.request(app).get('/teams');
+
+    expect(response.status).to.be.equal(200);
+    expect(response.body).to.be.deep.equal(mockfindAll);
+  })
+
   /**
    * Exemplo do uso de stubs com tipos
    */
@@ -36,10 +57,6 @@ describe('Seu teste', () => {
   //      .request(app)
   //      ...
 
-  //   expect(...)
+  //   expect(...)mockfindAll
   // });
-
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
-  });
 });

@@ -5,7 +5,7 @@ import {
   InferCreationAttributes,
   CreationOptional,
 } from 'sequelize';
-import db from '.';
+import db from '..';
 // import OtherModel from './OtherModel';
 
 class SequelizeTeams extends Model<InferAttributes<SequelizeTeams>,

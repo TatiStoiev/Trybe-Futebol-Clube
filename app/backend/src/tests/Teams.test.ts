@@ -20,7 +20,7 @@ const mockfindAll = {
   data: teams
 }
 
-describe('Seu teste', () => {
+describe('Testes para a rota Teams', () => {
   afterEach(function () {
     sinon.restore();
   });

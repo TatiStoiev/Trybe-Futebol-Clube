@@ -1,10 +1,15 @@
 import { Request, Router, Response } from 'express';
 import UserController from '../Controllers/User.controller';
+import Validations from '../middlewares/validations';
 
 const userController = new UserController();
 
 const UserRouter = Router();
 
-UserRouter.get('/', (req: Request, res: Response) => userController.findUserByEmail(req, res));
+UserRouter.post(
+  '/',
+  Validations.validateLogin,
+  (req: Request, res: Response) => userController.findUserByEmail(req, res),
+);
 
 export default UserRouter;

@@ -7,7 +7,7 @@ import { app } from '../app';
 
 import UserService from '../Services/User.service';
 import SequelizeUser from '../database/models/users/SequelizeUser';
-import { userInvalidPasswordFormat, userRegistered, validLoginBody } from './mocks/UserMock';
+import { userInvalidPasswordFormat, userRegistered, validLoginBody, WithoutEmailUser, invalidEmailFormat } from './mocks/UserMock';
 import JWT from '../utils/JWT';
 import Validations from '../middlewares/validations';
 
@@ -37,11 +37,12 @@ describe('Testes para a rota Login', () => {
   })
   it('Deve retornar status 400 e a mensagem "All fields must be filled" se os campos de email e senha não forem informados', async function () {
     const { status, body } = await chai.request(app).post('/login')
-      .send({});
+      .send(WithoutEmailUser);
 
     expect(status).to.equal(400);
     expect(body).to.be.deep.equal({ message: 'All fields must be filled' });
   })
+
   it('Deve retornar status 401 e a mensagem "Invalid email or password" se o formato da senha estiver incorreto', async function () {
     const { status, body } = await chai.request(app).post('/login')
       .send(userInvalidPasswordFormat);
@@ -49,13 +50,22 @@ describe('Testes para a rota Login', () => {
     expect(status).to.equal(401);
     expect(body).to.be.deep.equal({ message: 'Invalid email or password' });
   })
-  it('Deve retornar status 404 e a mensagem "User not found", se o usuário não for encontrado', async function () {
+
+  it('Deve retornar status 401 e a mensagem "Invalid email or password" se o formato do email estiver incorreto', async function () {
+    const { status, body } = await chai.request(app).post('/login')
+      .send(invalidEmailFormat);
+
+    expect(status).to.equal(401);
+    expect(body).to.be.deep.equal({ message: 'Invalid email or password' });
+  })
+
+  it('Deve retornar status 401 e a mensagem "Invalid email or password", se o usuário não for encontrado', async function () {
     sinon.stub(SequelizeUser, 'findOne').resolves(null);
 
     const { status, body } = await chai.request(app)
       .post('/login')
       .send(validLoginBody);
-    expect(status).to.equal(404);
-    expect(body).to.be.deep.equal({ message: 'User not found' });
+    expect(status).to.equal(401);
+    expect(body).to.be.deep.equal({ message: 'Invalid email or password' });
   })
   })

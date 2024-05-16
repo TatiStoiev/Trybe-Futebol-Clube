@@ -2,15 +2,11 @@ import * as sinon from 'sinon';
 import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
-import {teams} from './mocks/TeamsMock'
-import SequelizeTeams from '../database/models/SequelizeTeams';
+import SequelizeTeams from '../database/models/teams/SequelizeTeams';
 import { mockfindAll, mockFindById, mockTeamIdNotFound, mockTeam } from './mocks/TeamsMock';
 
 import { app } from '../app';
-import Example from '../database/models/ExampleModel';
 
-import { Response } from 'superagent';
-import mapStatusHTTP from '../utils/mapStatusHTTP';
 import TeamService from '../Services/Team.service';
 
 chai.use(chaiHttp);

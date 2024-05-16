@@ -3,7 +3,7 @@ import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 import {teams} from './mocks/TeamsMock';
-import SequelizeTeams from '../database/models/SequelizeTeams';
+import SequelizeTeams from '../database/models/teams/SequelizeTeams';
 
 import { app } from '../app';
 

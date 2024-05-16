@@ -9,7 +9,7 @@ const UserRouter = Router();
 UserRouter.post(
   '/',
   Validations.validateLogin,
-  (req: Request, res: Response) => userController.findUserByEmail(req, res),
+  (req: Request, res: Response) => userController.login(req, res),
 );
 
 export default UserRouter;

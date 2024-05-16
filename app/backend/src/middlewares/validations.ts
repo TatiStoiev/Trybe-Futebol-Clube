@@ -5,10 +5,17 @@ export default class Validations {
   static validateLogin(req: Request, res: Response, next: NextFunction): Response | void {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (email === '' || password === '') {
       return res.status(400).json({ message: 'All fields must be filled' });
     }
-    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+    const emailRegex = new RegExp([ // ajuda do chatGPT para resolver o lint do regex com muitas letras por linha
+      '^[a-zA-Z0-9]+',
+      '([._-]?[a-zA-Z0-9]+)*',
+      '@[a-zA-Z0-9]+',
+      '([.-]?[a-zA-Z0-9]+)*',
+      '\\.[a-zA-Z]{2,}$',
+    ].join(''));
+
     if (!emailRegex.test(email)) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }

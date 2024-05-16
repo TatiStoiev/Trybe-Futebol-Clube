@@ -5,10 +5,11 @@ export const user = {
     password: 'JustBillie',
   };
   
- export const userWithoutPassword = {
-    id: 1,
+ export const userInvalidPasswordFormat = {
+  id: 1,
     name: 'Billy Joe',
-    email: 'billyjoe@email.com',
+    email: 'billyjoe@email.br',
+    password: '123',
   };
   
  export const wrongPasswordUser = {

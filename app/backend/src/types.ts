@@ -19,3 +19,8 @@ export type MatchesType = {
   awayTeamGoals: number,
   inProgress: boolean,
 };
+
+export type TokenPayload = {
+  email: string,
+  role: string,
+};

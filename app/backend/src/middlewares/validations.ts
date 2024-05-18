@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import JWT from '../utils/JWT';
+import { TokenPayload } from '../types';
+
+export interface CustomRequest extends Request {
+  user?: TokenPayload;
+}
 
 export default class Validations {
   static validateLogin(req: Request, res: Response, next: NextFunction): Response | void {
@@ -25,16 +30,20 @@ export default class Validations {
     next();
   }
 
-  static async validateToken(req: Request, res: Response, next: NextFunction):
+  static async validateToken(req: CustomRequest, res: Response, next: NextFunction):
   Promise<Response | void> {
-    const token = req.headers.authorization;
+    const authorizationHeader = req.headers.authorization;
+
+    if (!authorizationHeader) {
+      return res.status(401).json({ message: 'Token not found' });
+    }
+    const token = JWT.extractToken(authorizationHeader);
+
     if (!token) {
-      return res.status(401).json({ message: 'Token not found ' });
+      return res.status(401).json({ message: 'Token must be a valid token' });
     }
     const validToken = await JWT.verify(token);
-    if (validToken === 'Token must be a valid token') {
-      return res.status(401).json({ message: validToken });
-    }
+    req.user = validToken as TokenPayload;
     next();
   }
 }

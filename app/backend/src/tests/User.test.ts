@@ -7,7 +7,7 @@ import { app } from '../app';
 
 import UserService from '../Services/User.service';
 import SequelizeUser from '../database/models/users/SequelizeUser';
-import { userInvalidPasswordFormat, userRegistered, validLoginBody, WithoutEmailUser, invalidEmailFormat } from './mocks/UserMock';
+import { userInvalidPasswordFormat, userRegistered, validLoginBody, WithoutEmailUser, WithoutPasswordlUser, invalidEmailFormat, tokenPayload } from './mocks/UserMock';
 import JWT from '../utils/JWT';
 import Validations from '../middlewares/validations';
 
@@ -18,10 +18,12 @@ const { expect } = chai;
 const userService = new UserService();
 
 
-describe('Testes para a rota Login', () => {
+describe('Testes para Login', () => {
   afterEach(function () {
     sinon.restore();
   });
+
+  describe('Testes para a rota POST /login', async function() {
 
   it('Deve retornar status 200 e token criado', async function () {
     sinon.stub(SequelizeUser, 'findOne').resolves(userRegistered as any);
@@ -35,9 +37,18 @@ describe('Testes para a rota Login', () => {
     expect(status).to.equal(200);
     expect(body).to.have.key('token');
   })
-  it('Deve retornar status 400 e a mensagem "All fields must be filled" se os campos de email e senha não forem informados', async function () {
+
+  it('Deve retornar status 400 e a mensagem "All fields must be filled" se o campo de email não for informados', async function () {
     const { status, body } = await chai.request(app).post('/login')
       .send(WithoutEmailUser);
+
+    expect(status).to.equal(400);
+    expect(body).to.be.deep.equal({ message: 'All fields must be filled' });
+  })
+
+  it('Deve retornar status 400 e a mensagem "All fields must be filled" se o campo de password não for informados', async function () {
+    const { status, body } = await chai.request(app).post('/login')
+      .send(WithoutPasswordlUser);
 
     expect(status).to.equal(400);
     expect(body).to.be.deep.equal({ message: 'All fields must be filled' });
@@ -69,3 +80,27 @@ describe('Testes para a rota Login', () => {
     expect(body).to.be.deep.equal({ message: 'Invalid email or password' });
   })
   })
+
+  describe('Testes para a rota GET /login/role', async function() {
+    it('Deve retornar a role do usuário quando um token válido é passado', async function() {
+      
+      const token = JWT.sign(tokenPayload);
+  
+      const response = await chai.request(app)
+        .get('/login/role')
+        .set('Authorization', `Bearer ${token}`);
+  
+      expect(response.status).to.be.equal(200);
+      expect(response.body).to.deep.equal({ role: 'user' });
+    });
+
+  });
+
+  it('Deve retornar status 401 e mensagem "Token not found" quando o token não é passado', async function() {
+    const response = await chai.request(app)
+      .get('/login/role');
+
+    expect(response.status).to.be.equal(401);
+    expect(response.body).to.have.property('message', 'Token not found');
+  });
+});

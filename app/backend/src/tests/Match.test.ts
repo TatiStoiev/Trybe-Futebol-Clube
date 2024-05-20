@@ -7,7 +7,7 @@ import SequelizeMatch from '../database/models/matches/SequelizeMatch';
 import { app } from '../app';
 
 import MatchService from '../Services/Match.service';
-import { mockfindAllMatches } from './mocks/MatchMock';
+import { mockfindAllMatches, matchesInProgress } from './mocks/MatchMock';
 
 chai.use(chaiHttp);
 
@@ -28,5 +28,14 @@ describe('Testes para a rota Match', () => {
 
     expect(response.status).to.be.equal(200);
     expect(response.body).to.be.deep.equal(mockfindAllMatches);
+  })
+
+  it('Deve retornar status SUCCESSFUL e a lista de partidas em progresso se a query inProgress for true', async function () {
+    sinon.stub(matchService, 'getInProgressMatches').resolves(matchesInProgress as any);
+
+    const response = await chai.request(app).get('/matches?inProgress=true');
+
+    expect(response.status).to.be.equal(200);
+    expect(response.body).to.be.deep.equal(matchesInProgress);
   })
 });

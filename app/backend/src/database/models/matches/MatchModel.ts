@@ -37,15 +37,4 @@ export default class MatchModel implements IMatchModel {
     const { homeTeamGoals, awayTeamGoals } = result;
     return { homeTeamGoals, awayTeamGoals };
   }
-
-  async findInProgress(inProgress: boolean): Promise<IMatchResults[]> {
-    const results = await this.model.findAll({ where: { inProgress },
-      attributes: ['homeTeamGoals', 'awayTeamGoals'],
-    });
-    const matches = results.map((match) => ({
-      homeTeamGoals: match.homeTeamGoals,
-      awayTeamGoals: match.awayTeamGoals,
-    }));
-    return matches;
-  }
 }

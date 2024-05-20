@@ -13,6 +13,10 @@ export default {
             homeTeamId: {
                 type: DataTypes.INTEGER, 
                 field: 'home_team_id',
+                references: {
+                    model: 'teams', 
+                    key: 'id',
+                }
             }, 
             homeTeamGoals: {
                 type: DataTypes.INTEGER, 
@@ -20,7 +24,11 @@ export default {
             },
             awayTeamId: {
                 type: DataTypes.INTEGER, 
-                field: 'away_team_goals',
+                field: 'away_team_id',
+                references: {
+                    model: 'teams', 
+                    key: 'id',
+                }
             },
             awayTeamGoals: {
                 type: DataTypes.INTEGER, 
@@ -28,6 +36,7 @@ export default {
             },
             inProgress: {
                 type: DataTypes.BOOLEAN,
+                field: 'in_progress',
             }            
         })
     },

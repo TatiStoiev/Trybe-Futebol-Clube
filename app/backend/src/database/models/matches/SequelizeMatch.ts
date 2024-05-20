@@ -6,7 +6,7 @@ import {
   CreationOptional,
 } from 'sequelize';
 import db from '..';
-// import OtherModel from './OtherModel';
+import SequelizeTeams from '../teams/SequelizeTeams';
 
 class SequelizeMatch extends Model<InferAttributes<SequelizeMatch>,
 InferCreationAttributes<SequelizeMatch>> {
@@ -28,6 +28,10 @@ SequelizeMatch.init({
   homeTeamId: {
     type: DataTypes.INTEGER,
     field: 'home_team_id',
+    references: {
+      model: 'teams',
+      key: 'id',
+    },
   },
   homeTeamGoals: {
     type: DataTypes.INTEGER,
@@ -35,7 +39,11 @@ SequelizeMatch.init({
   },
   awayTeamId: {
     type: DataTypes.INTEGER,
-    field: 'away_team_goals',
+    field: 'away_team_id',
+    references: {
+      model: 'teams',
+      key: 'id',
+    },
   },
   awayTeamGoals: {
     type: DataTypes.INTEGER,
@@ -50,6 +58,26 @@ SequelizeMatch.init({
   modelName: 'MatchModel',
   tableName: 'matches',
   timestamps: false,
+});
+
+SequelizeMatch.belongsTo(SequelizeTeams, {
+  foreignKey: 'homeTeamId',
+  as: 'homeTeam',
+});
+
+SequelizeMatch.belongsTo(SequelizeTeams, {
+  foreignKey: 'awayTeamId',
+  as: 'awayTeam',
+});
+
+SequelizeTeams.hasMany(SequelizeMatch, {
+  foreignKey: 'homeTeamId',
+  as: 'homeMatches',
+});
+
+SequelizeTeams.hasMany(SequelizeMatch, {
+  foreignKey: 'awayTeamId',
+  as: 'awayMatches',
 });
 /**
         * `Workaround` para aplicar as associations em TS:

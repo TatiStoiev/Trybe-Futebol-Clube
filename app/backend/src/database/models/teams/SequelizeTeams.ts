@@ -6,7 +6,6 @@ import {
   CreationOptional,
 } from 'sequelize';
 import db from '..';
-// import OtherModel from './OtherModel';
 
 class SequelizeTeams extends Model<InferAttributes<SequelizeTeams>,
 InferCreationAttributes<SequelizeTeams>> {
@@ -32,7 +31,6 @@ SequelizeTeams.init({
   tableName: 'teams',
   timestamps: false,
 });
-
 /**
     * `Workaround` para aplicar as associations em TS:
     * Associations 1:N devem ficar em uma das instâncias de modelo

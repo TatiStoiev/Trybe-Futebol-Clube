@@ -6,9 +6,12 @@ const matchController = new MatchController();
 
 const MatchRouter = Router();
 
-MatchRouter.get('/', (req: Request, res: Response) => matchController.findAllMatches(req, res));
-MatchRouter.get('/?', (req: Request, res: Response) =>
-  matchController.findMatchInProgress(req, res));
+MatchRouter.get(
+  '/',
+  Validations.validateToken,
+  (req: Request, res: Response) => matchController.findAllMatches(req, res),
+);
+
 MatchRouter.patch(
   '/:id/finish',
   Validations.validateToken,

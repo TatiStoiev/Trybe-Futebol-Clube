@@ -3,6 +3,7 @@ import IMatch from '../../../Interfaces/Matches/IMatch';
 import SequelizeMatch from './SequelizeMatch';
 import { IMatchResults } from '../../../Interfaces/Matches/IMatchResults';
 import SequelizeTeams from '../teams/SequelizeTeams';
+import IMatchCreateBody from '../../../Interfaces/Matches/IMatchCreateBody';
 
 export default class MatchModel implements IMatchModel {
   private model = SequelizeMatch;
@@ -43,5 +44,11 @@ export default class MatchModel implements IMatchModel {
     if (affectedRows === 0) return null;
     const match = this.findById(id);
     return match;
+  }
+
+  async create(data: IMatchCreateBody): Promise<IMatch> {
+    const matchCreated = await this.model.create(data);
+    const { id, homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals, inProgress } = matchCreated;
+    return { id, homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals, inProgress };
   }
 }

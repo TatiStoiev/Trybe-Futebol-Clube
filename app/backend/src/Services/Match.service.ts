@@ -3,6 +3,7 @@ import MatchModel from '../database/models/matches/MatchModel';
 import { IMatchModel } from '../Interfaces/Matches/IMatchModel';
 import IMatch from '../Interfaces/Matches/IMatch';
 import { IMatchResults } from '../Interfaces/Matches/IMatchResults';
+import IMatchCreateBody from '../Interfaces/Matches/IMatchCreateBody';
 
 export default class MatchService {
   constructor(
@@ -28,5 +29,10 @@ export default class MatchService {
       return { status: 'INVALID_DATA', data: { message: 'Invalid data' } };
     }
     return { status: 'SUCCESSFUL', data: updatedMatch };
+  }
+
+  public async createMatch(data: IMatchCreateBody): Promise<ServiceResponse<IMatchResults>> {
+    const createdMatch = await this.matchModel.create(data);
+    return { status: 'SUCCESSFUL', data: createdMatch };
   }
 }

@@ -16,10 +16,17 @@ MatchRouter.patch(
   Validations.validateToken,
   (req: Request, res: Response) => matchController.updateForFinishedMatch(req, res),
 );
+
 MatchRouter.patch(
   '/:id',
   Validations.validateToken,
   (req: Request, res: Response) => matchController.updateMatch(req, res),
+);
+
+MatchRouter.post(
+  '/',
+  Validations.validateToken,
+  (req: Request, res: Response) => matchController.createMatch(req, res),
 );
 
 export default MatchRouter;

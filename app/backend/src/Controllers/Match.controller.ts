@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import mapStatusHTTP from '../utils/mapStatusHTTP';
 import MatchService from '../Services/Match.service';
+import IMatchCreateBody from '../Interfaces/Matches/IMatchCreateBody';
 
 export default class MatchController {
   constructor(
@@ -38,5 +39,18 @@ export default class MatchController {
 
     await this.matchService.updateMatch(id, data);
     return res.status(200).json({ message: 'Finished' });
+  }
+
+  public async createMatch(req: Request, res: Response) {
+    const { homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals } = req.body;
+    const data: IMatchCreateBody = { homeTeamId,
+      homeTeamGoals,
+      awayTeamId,
+      awayTeamGoals,
+      inProgress: true };
+
+    const createdMatch = await this.matchService.createMatch(data);
+
+    return res.status(201).json(createdMatch.data);
   }
 }

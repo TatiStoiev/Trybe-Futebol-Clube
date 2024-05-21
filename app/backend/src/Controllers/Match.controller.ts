@@ -51,6 +51,6 @@ export default class MatchController {
 
     const createdMatch = await this.matchService.createMatch(data);
 
-    return res.status(mapStatusHTTP(createdMatch.status)).json(createdMatch.data);
+    return res.status(201).json(createdMatch.data);
   }
 }

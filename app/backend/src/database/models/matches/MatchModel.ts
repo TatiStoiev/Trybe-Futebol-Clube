@@ -38,10 +38,8 @@ export default class MatchModel implements IMatchModel {
     return { homeTeamGoals, awayTeamGoals };
   }
 
-  async update(id: IMatch['id'], homeTeamGoals: number, awayTeamGoals: number):
-  Promise<IMatchResults | null> {
-    const [affectedRows] = await
-    this.model.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
+  async update(id: IMatch['id'], data: Partial<IMatch>): Promise<IMatchResults | null> {
+    const [affectedRows] = await this.model.update(data, { where: { id } });
     if (affectedRows === 0) return null;
     const match = this.findById(id);
     return match;

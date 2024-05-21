@@ -20,4 +20,13 @@ export default class MatchService {
     const matchInProgress = matches.filter((match) => match.inProgress === inProgress);
     return { status: 'SUCCESSFUL', data: matchInProgress };
   }
+
+  public async updateMatch(id: number, homeTeamGoals: number, awayTeamGoals: number):
+  Promise<ServiceResponse<IMatchResults>> {
+    const updatedMatch = await this.matchModel.update(id, homeTeamGoals, awayTeamGoals);
+    if (updatedMatch === null) {
+      return { status: 'INVALID_DATA', data: { message: 'Invalid data' } };
+    }
+    return { status: 'SUCCESSFUL', data: updatedMatch };
+  }
 }

@@ -137,5 +137,37 @@ describe('Testes para a rota POST/match', () => {
     expect(response.status).to.be.equal(401);
     expect(response.body.message).to.equal('Token must be a valid token')
   })
+
+  it('Não é possivel cadastrar uma partida com dois times iguais', async function () {
+    sinon.stub(jwt, 'verify').callsFake(() => validUser)
+    sinon.stub(SequelizeMatch, 'create').resolves(createdMatch as any);
+    
+    const response = await chai.request(app).post('/matches')
+    .send({
+      "homeTeamId": 16, 
+      "awayTeamId": 16, 
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 2
+    })
+    .set('authorization', `Bearer ${token}`);
+
+    expect(response.status).to.be.equal(422);
+  })
+
+  it('Não é possivel cadastrar uma partida com um time que não consta no banco de dados', async function () {
+    sinon.stub(jwt, 'verify').callsFake(() => validUser)
+    sinon.stub(SequelizeMatch, 'create').resolves(createdMatch as any);
+    
+    const response = await chai.request(app).post('/matches')
+    .send({
+      "homeTeamId": 999, 
+      "awayTeamId": 16, 
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 2
+    })
+    .set('authorization', `Bearer ${token}`);
+
+    expect(response.status).to.be.equal(404);
+  })
 })
 });

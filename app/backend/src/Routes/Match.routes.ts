@@ -26,6 +26,7 @@ MatchRouter.patch(
 MatchRouter.post(
   '/',
   Validations.validateToken,
+  Validations.validateTeams,
   (req: Request, res: Response) => matchController.createMatch(req, res),
 );
 

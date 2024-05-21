@@ -88,8 +88,27 @@ export const mockfindAllMatches = [
       "awayTeam": {
         "teamName": "Santos"
       }
-    }
+    },
+    {
+      "id": 3,
+      "homeTeamId": 4,
+      "homeTeamGoals": 3,
+      "awayTeamId": 11,
+      "awayTeamGoals": 0,
+      "inProgress": false,
+      "homeTeam": {
+        "teamName": "Corinthians"
+      },
+      "awayTeam": {
+        "teamName": "Napoli-SC"
+      }
+    },
   ]
+
+  export const responseInProgressFalse = {
+    status: 'SUCCESSFUL', 
+    data: finishedMatches,
+  }
 
   export const finishMatch = [
     {
@@ -108,10 +127,16 @@ export const mockfindAllMatches = [
   }
   ]
 
-  export const matchFinished = {
-    status: 'SUCCESSFUL',
-    data: finishMatch
-  }
+  export const matchFinished = { homeTeamGoals: 1, awayTeamGoals: 1 }
 
   export const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlci5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTcxNjI1ODI3NCwiZXhwIjoxNzE2MjcyNjc0fQ.yd7AFhd4d3gGs-4XeWu-qWNsDQkp_HblADeLR1MPm6A";
    
+  export const validUser = {
+        email: 'user@user.com',
+        role: 'user',    
+      }
+
+      export const invalidUser = {
+        email: 'user@user.com',
+        role: 'admin',    
+      }

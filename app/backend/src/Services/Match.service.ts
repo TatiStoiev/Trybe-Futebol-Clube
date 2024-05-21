@@ -21,9 +21,9 @@ export default class MatchService {
     return { status: 'SUCCESSFUL', data: matchInProgress };
   }
 
-  public async updateMatch(id: number, homeTeamGoals: number, awayTeamGoals: number):
+  public async updateMatch(id: number, data: Partial<IMatch>):
   Promise<ServiceResponse<IMatchResults>> {
-    const updatedMatch = await this.matchModel.update(id, homeTeamGoals, awayTeamGoals);
+    const updatedMatch = await this.matchModel.update(id, data);
     if (updatedMatch === null) {
       return { status: 'INVALID_DATA', data: { message: 'Invalid data' } };
     }

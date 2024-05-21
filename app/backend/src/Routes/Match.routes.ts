@@ -8,7 +8,6 @@ const MatchRouter = Router();
 
 MatchRouter.get(
   '/',
-  Validations.validateToken,
   (req: Request, res: Response) => matchController.findAllMatches(req, res),
 );
 

@@ -28,10 +28,8 @@ describe('Testes para a rota Match', () => {
 
   it('Deve retornar status SUCCESSFUL e a lista de partidas', async function () {
     sinon.stub(SequelizeMatch, 'findAll').resolves(mockfindAllMatches as any);
-    sinon.stub(jwt, 'verify').callsFake(() => validUser)
 
     const response = await chai.request(app).get('/matches')
-    .set('authorization', `Bearer ${token}`);
 
     expect(response.status).to.be.equal(200);
     expect(response.body).to.be.deep.equal(mockfindAllMatches);
@@ -40,24 +38,21 @@ describe('Testes para a rota Match', () => {
 
   it('Deve retornar status SUCCESSFUL e a lista de partidas em progresso se a query inProgress for true', async function () {
     sinon.stub(matchService, 'getInProgressMatches').resolves(matchesInProgress as any);
-    sinon.stub(jwt, 'verify').callsFake(() => validUser)
-
+  
     const response = await chai.request(app).get('/matches')
     .query({ inProgress: 'true' })
-    .set('authorization', `Bearer ${token}`);
 
     expect(response.status).to.be.equal(200);
     // expect(response.body).to.be.deep.equal(matchesInProgress);
   })
 
   it('Deve retornar status SUCCESSFUL e a lista de partidas finalizadas se a query inProgress for false', async function () {
-    sinon.stub(jwt, 'verify').callsFake(() => validUser)
+
     sinon.stub(matchController, 'findAllMatches')
     .resolves(responseInProgressFalse as any);
 
     const response = await chai.request(app).get('/matches')
     .query({ inProgress: 'false' })
-    .set('authorization', `Bearer ${token}`);
 
     expect(response.status).to.be.equal(200);
     // expect(response.body).to.be.deep.equal(finishedMatches);

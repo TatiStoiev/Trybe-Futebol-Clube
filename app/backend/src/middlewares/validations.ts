@@ -34,7 +34,7 @@ export default class Validations {
   Promise<Response | void> {
     const authorizationHeader = req.headers.authorization;
 
-    if (!authorizationHeader) {
+    if (!authorizationHeader || authorizationHeader === '') {
       return res.status(401).json({ message: 'Token not found' });
     }
     const token = JWT.extractToken(authorizationHeader);

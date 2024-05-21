@@ -38,14 +38,10 @@ export default class MatchModel implements IMatchModel {
     return { homeTeamGoals, awayTeamGoals };
   }
 
-  async findInProgress(inProgress: boolean): Promise<IMatchResults[]> {
-    const results = await this.model.findAll({ where: { inProgress },
-      attributes: ['homeTeamGoals', 'awayTeamGoals'],
-    });
-    const matches = results.map((match) => ({
-      homeTeamGoals: match.homeTeamGoals,
-      awayTeamGoals: match.awayTeamGoals,
-    }));
-    return matches;
+  async update(id: IMatch['id'], data: Partial<IMatch>): Promise<IMatchResults | null> {
+    const [affectedRows] = await this.model.update(data, { where: { id } });
+    if (affectedRows === 0) return null;
+    const match = this.findById(id);
+    return match;
   }
 }

@@ -131,12 +131,31 @@ export const mockfindAllMatches = [
 
   export const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlci5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTcxNjI1ODI3NCwiZXhwIjoxNzE2MjcyNjc0fQ.yd7AFhd4d3gGs-4XeWu-qWNsDQkp_HblADeLR1MPm6A";
    
+  export const invalidToken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlci5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTcxNjI1ODI3NCwiZXhwIjoxNzE2MjcyNjc0fQ.yd7AFhd4d3gGs-4XeWu-qWNsDQkp";
+
   export const validUser = {
         email: 'user@user.com',
         role: 'user',    
-      }
+  }
 
-      export const invalidUser = {
+ export const invalidUser = {
         email: 'user@user.com',
         role: 'admin',    
-      }
+  }
+
+  export const createdMatch = {
+    "id": 50,
+    "homeTeamId": 16,
+    "homeTeamGoals": 2,
+    "awayTeamId": 8,
+    "awayTeamGoals": 2,
+    "inProgress": true
+  }
+
+  export const matchCreated = {
+    status: 'SUCCESSFUL',
+    data: createdMatch,
+  }
+
+
+

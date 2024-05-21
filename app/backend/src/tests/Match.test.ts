@@ -9,7 +9,9 @@ import { app } from '../app';
 
 import MatchService from '../Services/Match.service';
 import MatchController from '../Controllers/Match.controller';
-import { mockfindAllMatches, matchesInProgress, finishedMatches, finishMatch, matchFinished, token, validUser, invalidUser, responseInProgressFalse } from './mocks/MatchMock';
+import { mockfindAllMatches, matchesInProgress, finishedMatches, 
+  invalidToken, matchFinished, token, validUser, invalidUser, 
+  responseInProgressFalse, createdMatch, matchCreated } from './mocks/MatchMock';
 import Validations from '../middlewares/validations';
 
 chai.use(chaiHttp);
@@ -81,6 +83,59 @@ describe('Teste para a rota PATCH/matches/:id/finish', () => {
 
     expect(response.status).to.be.equal(200);
     expect(response.body.message).to.equal('Finished');
+  })
+})
+
+describe('Testes para a rota POST/match', () => {
+
+  it('Deve retornar status 201 e a nova partida após ser cadastrada', async function () {
+    sinon.stub(jwt, 'verify').callsFake(() => validUser)
+    sinon.stub(SequelizeMatch, 'create').resolves(createdMatch as any);
+    
+    const response = await chai.request(app).post('/matches')
+    .send({
+      "homeTeamId": 16, 
+      "awayTeamId": 8, 
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 2
+    })
+    .set('authorization', `Bearer ${token}`);
+
+    expect(response.status).to.be.equal(201);
+    expect(response.body).to.be.deep.equal(createdMatch);
+  })
+
+  it('Não é possivel cadastrar uma partida sem um token', async function () {
+
+    sinon.stub(SequelizeMatch, 'create').resolves(createdMatch as any);
+    
+    const response = await chai.request(app).post('/matches')
+    .send({
+      "homeTeamId": 16, 
+      "awayTeamId": 8, 
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 2
+    })
+
+    expect(response.status).to.be.equal(401);
+    expect(response.body.message).to.equal('Token not found')
+  })
+
+  it('Não é possivel cadastrar uma partida com token inválido', async function () {
+    sinon.stub(jwt, 'verify').callsFake(() => validUser)
+    sinon.stub(SequelizeMatch, 'create').resolves(createdMatch as any);
+    
+    const response = await chai.request(app).post('/matches')
+    .send({
+      "homeTeamId": 16, 
+      "awayTeamId": 8, 
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 2
+    })
+    .set('authorization', `Bearer ${''}`);
+
+    expect(response.status).to.be.equal(401);
+    expect(response.body.message).to.equal('Token must be a valid token')
   })
 })
 });

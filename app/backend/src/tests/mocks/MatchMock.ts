@@ -90,4 +90,28 @@ export const mockfindAllMatches = [
       }
     }
   ]
+
+  export const finishMatch = [
+    {
+    "id": 1,
+    "homeTeamId": 16,
+    "homeTeamGoals": 1,
+    "awayTeamId": 8,
+    "awayTeamGoals": 1,
+    "inProgress": false,
+    "homeTeam": {
+      "teamName": "São Paulo"
+    },
+    "awayTeam": {
+      "teamName": "Grêmio"
+    }
+  }
+  ]
+
+  export const matchFinished = {
+    status: 'SUCCESSFUL',
+    data: finishMatch
+  }
+
+  export const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlci5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTcxNjI1ODI3NCwiZXhwIjoxNzE2MjcyNjc0fQ.yd7AFhd4d3gGs-4XeWu-qWNsDQkp_HblADeLR1MPm6A";
    

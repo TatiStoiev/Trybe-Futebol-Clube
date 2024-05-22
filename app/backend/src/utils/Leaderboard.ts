@@ -102,7 +102,6 @@ export default async function calculateTeamPerformance() {
 
   const teamPerformances = await Promise.all(teamPerformancesPromises);
 
-  console.log(teamPerformances);
   return teamPerformances;
 }
 

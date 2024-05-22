@@ -2,14 +2,16 @@ import * as sinon from 'sinon';
 import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
+import { Request, Response } from 'express';
 
 import { app } from '../app';
 
 import UserService from '../Services/User.service';
 import SequelizeUser from '../database/models/users/SequelizeUser';
-import { userInvalidPasswordFormat, userRegistered, validLoginBody, WithoutEmailUser, WithoutPasswordlUser, invalidEmailFormat, tokenPayload } from './mocks/UserMock';
+import { returnUser, userInvalidPasswordFormat, userRegistered, validLoginBody, WithoutEmailUser, WithoutPasswordlUser, invalidEmailFormat, tokenPayload } from './mocks/UserMock';
 import JWT from '../utils/JWT';
 import Validations from '../middlewares/validations';
+import UserController from '../Controllers/User.controller';
 
 chai.use(chaiHttp);
 
@@ -103,4 +105,46 @@ describe('Testes para Login', () => {
     expect(response.status).to.be.equal(401);
     expect(response.body).to.have.property('message', 'Token not found');
   });
+
+  describe('Testes unitários', () => {
+    const req = {} as Request;
+    const res = {} as Response;
+  
+    it('Teste para findUserById no controller', async function() {
+      req.body = {    
+        email: 'billyjoe@email.com',
+        password: 'JustBillie'
+      }  
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns(res);
+
+      const userServiceMock = {
+        findByEmail: sinon.stub().resolves({ status: 'SUCCESSFUL', data: returnUser})
+      };
+
+      const mapStatusHTTPStub = sinon.stub().callsFake((status) => 'SUCCESSFUL');
+    
+      const userController = new UserController(userServiceMock as any);
+
+      await userController.findUserByEmail(req as Request, res as Response);
+
+      expect(userServiceMock.findByEmail.calledOnceWith('billyjoe@email.com')).to.be.true;    
+  })
+});
+
+it('Teste para findUserById na service', async function() {
+
+  const findByEmailStub = sinon.stub().resolves(null);
+
+  const userService = new UserService({ findByEmail: findByEmailStub });
+
+  const email = 'test@example.com';
+  const result = await userService.findByEmail(email);
+
+   expect(findByEmailStub.calledOnceWith(email)).to.be.true;
+
+  expect(result).to.deep.equal({ status: 'NOT_FOUND', data: { message: 'User not found' } });
+
+
+});
 });

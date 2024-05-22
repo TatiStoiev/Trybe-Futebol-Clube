@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import JWT from '../utils/JWT';
 import { TokenPayload } from '../types';
+import TeamService from '../Services/Team.service';
 
 export interface CustomRequest extends Request {
   user?: TokenPayload;
 }
+
+const teamService = new TeamService();
 
 export default class Validations {
   static validateLogin(req: Request, res: Response, next: NextFunction): Response | void {
@@ -44,6 +47,27 @@ export default class Validations {
     }
     const validToken = await JWT.verify(token);
     req.user = validToken as TokenPayload;
+    next();
+  }
+
+  static async validateTeams(req: Request, res: Response, next: NextFunction):
+  Promise<Response | void> {
+    const { homeTeamId, awayTeamId } = req.body;
+
+    const homeTeamExist = await teamService.getById(homeTeamId);
+    console.log('home team exist:', homeTeamExist);
+    if (homeTeamExist.status === 'NOT_FOUND') {
+      return res.status(404).json({ message: 'There is no team with such id!' });
+    }
+
+    const awayTeamExist = await teamService.getById(awayTeamId);
+    if (awayTeamExist.status === 'NOT_FOUND') {
+      return res.status(404).json({ message: 'There is no team with such id!' });
+    }
+    if (homeTeamId === awayTeamId) {
+      return res.status(422)
+        .json({ message: 'It is not possible to create a match with two equal teams' });
+    }
     next();
   }
 }
